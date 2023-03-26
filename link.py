@@ -1,6 +1,5 @@
 import mysql.connector
 
-
 class Speaker:
 
     def __init__(self):
@@ -20,6 +19,7 @@ class Speaker:
             self.cursor.execute(sql, val)
             self.log.commit()
             print(self.cursor.rowcount, "record inserted.")
+            return True
 
         except mysql.connector.Error as err:
             print("Something went wrong: {}".format(err))

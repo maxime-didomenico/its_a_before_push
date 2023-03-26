@@ -150,6 +150,6 @@ def home():
     frame_message_entry = tk.Frame(frame_message, bg="#2C2F33", width=600, height=80, borderwidth=2, relief="groove")
     frame_message_entry.place(relx=0.5, rely=0.95, anchor="center")
 
-home()
+connexion()
 
 root.mainloop()

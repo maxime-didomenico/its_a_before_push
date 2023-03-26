@@ -159,7 +159,6 @@ try :
 
             except :
                 print("Login failed !")
-                False
 
         else:
             break

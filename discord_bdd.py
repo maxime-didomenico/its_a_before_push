@@ -21,7 +21,8 @@ class Discord_bdd:
 
     def get_all_messages(self):
         self.cursor.execute("SELECT * FROM messages")
-        return self.cursor.fetchall()
+        for row in self.cursor:
+            print(row)
 
     def add_message(self, text, id_utilisateur, id_canal):
         self.cursor.execute("INSERT INTO Messages (text, id_utilisateur, id_canal) VALUES (%s, %s, %s)",
@@ -45,4 +46,21 @@ class Discord_bdd:
         self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom_utilisateur = %s", (nom,))
         return self.cursor.fetchone()
 
-# connexion = Discord_bdd('root', 'azerty', 'discord')
+    def create_discussion(self, nom):
+        self.cursor.execute("INSERT INTO Discussions (nom_discussion) VALUES (%s)", (nom,))
+        self.connection.commit()
+
+    def get_discussion(self, nom):
+        self.cursor.execute("SELECT * FROM Discussions WHERE nom_discussion = %s", (nom,))
+        return self.cursor.fetchone()
+
+    def get_all_discussions(self):
+        self.cursor.execute("SELECT * FROM Discussions")
+        return self.cursor.fetchall()
+
+    def create_canal(self, nom,description, canal):
+        self.cursor.execute("INSERT INTO Canaux (nom_canal, description, type_canal) VALUES (%s, %s, %S)", (nom, description, canal))
+        self.connection.commit()
+
+connexion = Discord_bdd('root', 'azerty', 'discord')
+print(connexion.get_all_messages())
