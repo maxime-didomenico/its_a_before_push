@@ -1,7 +1,8 @@
 import json
 import socket
-from link import *
+from discord_bdd import Discord_bdd
 from threading import Thread
+import time
 
 class Server:
 
@@ -11,7 +12,9 @@ class Server:
         self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((host, port))
+        self.link = Discord_bdd("root", "azerty", "discord")
         print("Connection is started !")
+        self.start()
 
 
     def start(self):
@@ -100,9 +103,18 @@ class Server:
             return False
     
 
-    def send_message(self, username, content):
+    def send_message(self, text, username,id_canal):
+        date = time.strftime("%d/%m/%Y")
+        hour = time.strftime("%H:%M:%S")
         try :
-            self.link.send_message(username, content)
+            self.link.create_message(text, username, date, hour, id_canal)
+
+        except :
+            return False
+
+    def delete_message(self, id_message):
+        try :
+            self.link.delete_message(id_message)
 
         except :
             return False
@@ -115,6 +127,4 @@ class Server:
         except :
             return False
 
-
 server = Server()
-server.start()

@@ -24,9 +24,10 @@ class Discord_bdd:
         for row in self.cursor:
             print(row)
 
-    def add_message(self, text, id_utilisateur, id_canal):
-        self.cursor.execute("INSERT INTO Messages (text, id_utilisateur, id_canal) VALUES (%s, %s, %s)",
-                            (text, id_utilisateur, id_canal))
+    def create_message(self, text,date,hour,id_user, id_canal):
+        self.cursor.execute("INSERT INTO Messages (text,date_envoi,heure_envoi, id_utilisateur, id_canal) "
+                            "VALUES (%s, %s, %s, %s, %s)",
+                            (text, date, hour,id_user, id_canal))
         self.connection.commit()
 
     def update_message(self, text, id_utilisateur, id_canal):
@@ -62,5 +63,24 @@ class Discord_bdd:
         self.cursor.execute("INSERT INTO Canaux (nom_canal, description, type_canal) VALUES (%s, %s, %S)", (nom, description, canal))
         self.connection.commit()
 
-connexion = Discord_bdd('root', 'azerty', 'discord')
-print(connexion.get_all_messages())
+    def get_canal(self, nom):
+        self.cursor.execute("SELECT * FROM Canaux WHERE nom_canal = %s", (nom,))
+        return self.cursor.fetchone()
+
+    def get_all_canaux(self):
+        self.cursor.execute("SELECT * FROM Canaux")
+        return self.cursor.fetchall()
+
+    def check_login(self, username, password):
+        self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom_utilisateur = %s AND mot_de_passe = %s", (username, password))
+        return self.cursor.fetchone()
+
+    def sign_in(self, username, password, mail):
+        self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom_utilisateur = %s", (username,))
+        if self.cursor.fetchone() is None:
+            self.create_user(username, mail, password)
+            return True
+        else:
+            return False
+
+

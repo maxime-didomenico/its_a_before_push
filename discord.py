@@ -1,12 +1,27 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import time
+import socket
+
 
 root = tk.Tk()
 root.title("Discord.py")
 root.geometry("1200x800")
 root.resizable(True, True)
 root.configure(bg="#2C2F33")
+
+# server connection
+
+client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+host = socket.gethostname()
+
+client_socket.connect((host, 5566))
+
+message = client_socket.recv(1024)
+message = message.decode("utf8")
+print(message)
+
 # function
 
 def detect_space(input):
