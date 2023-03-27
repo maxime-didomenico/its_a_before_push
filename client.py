@@ -11,16 +11,19 @@ class Client:
         print("Client connected !")
 
 
-    def sign_in(self, username, password, mail):
+    def send_signin(self, nom,prenom, mail, password):
         signin_data = {
             "type": "signin",
-            "username": username,
+            "name": nom,
+            "f_name": prenom,
             "password": password,
             "mail": mail
         }
         msg = json.dumps(signin_data)
         msg = msg.encode("utf8")
-        self.client_socket.sendall(msg)
+        self.client_socket.send(msg)
+        response = self.client_socket.recv(1024)
+        return response.decode("utf8")
 
 
     def send_login(self, username, password):
@@ -31,8 +34,9 @@ class Client:
         }
         msg = json.dumps(login_data)
         msg = msg.encode("utf8")
-        self.client_socket.sendall(msg)
-
+        self.client_socket.send(msg)
+        response = self.client_socket.recv(1024)
+        return response.decode("utf8")
 
     def discussionID(self, usernameA, usernameB):
         discussion_data = {
@@ -42,7 +46,7 @@ class Client:
         }
         msg = json.dumps(discussion_data)
         msg = msg.encode("utf8")
-        self.client_socket.sendall(msg)
+        self.client_socket.send(msg)
 
 
     def messageID(self, discussion, message):
@@ -53,7 +57,7 @@ class Client:
         }
         msg = json.dumps(message_data)
         msg = msg.encode("utf8")
-        self.client_socket.sendall(msg)
+        self.client_socket.send(msg)
 
 
     def askForHistory(self, usernameA, usernameB):
@@ -64,7 +68,9 @@ class Client:
         }
         msg = json.dumps(history_data)
         msg = msg.encode("utf8")
-        self.client_socket.sendall(msg)
+        self.client_socket.send(msg)
+        response = self.client_socket.recv(1024)
+        return response.decode("utf8")
 
 
     def readHistory(self):
@@ -85,7 +91,7 @@ class Client:
             }
             msg = json.dumps(message_data)
             msg = msg.encode("utf8")
-            self.client_socket.sendall(msg)
+            self.client_socket.send(msg)
 
 
     def send_emoji(self, discussion, message, emoji):
@@ -97,75 +103,13 @@ class Client:
         }
         msg = json.dumps(emoji_data)
         msg = msg.encode("utf8")
-        self.client_socket.sendall(msg)
+        self.client_socket.send(msg)
 
 
     def receive_response(self):
         data = self.client_socket.recv(1024)
-        print(f"Received data: {data}")
+        return data.decode("utf8")
 
 
     def close(self):
         self.client_socket.close()
-        
-
-client = Client()
-
-
-# à modifier quand on aura l'interface (on aura pas 1 milliard de while 
-# à la con)
-
-try :
-    
-    cond = 0
-    while cond == 0:
-        login = input("Enter your login : ")
-        password = input("Enter your password : ")
-        
-        if cond == 0:
-            
-            try :
-                client.send_login(login, password)
-                check_log = client.receive_response()
-                
-                if check_log == True:
-                    print("Login successful !")
-                
-                else :
-                    print("Login failed !")
-                
-                while True:
-
-                    check = input("Do you want to send a message ? (y/n) : ")
-                    
-                    if cond == 1:
-                        break
-
-                    if check == "y":
-                        content = input("Enter your message : ")
-                        client.send_message(login, content)
-
-                    if check == "n":
-                        logout = input("Do you want to logout ? (y/n) : ")
-                        if logout == "y":
-                            cond = 1
-                            break
-                        else:
-                            client.close()
-                            check_log = False
-                            break
-                    
-                    client.receive_response()
-
-            except :
-                print("Login failed !")
-
-        else:
-            break
-
-except :
-    print("Connection failed !")
-
-finally :
-    print("Client logged out.")
-    client.close()

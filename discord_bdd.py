@@ -38,13 +38,14 @@ class Discord_bdd:
         self.cursor.execute("DELETE FROM Messages WHERE id = %s", (id,))
         self.connection.commit()
 
-    def create_user(self, nom, email, mdp):
-        self.cursor.execute("INSERT INTO Utilisateurs (nom_utilisateur, email_utilisateur, mot_de_passe) VALUES (%s, %s, %s)"
-                            , (nom, email, mdp))
+    def create_user(self, f_name, name, email, mdp):
+        self.cursor.execute("INSERT INTO Utilisateurs (nom, prenom, email_utilisateur, mot_de_passe) VALUES (%s, %s, %s, %s)"
+                            , (f_name,name,email, mdp))
         self.connection.commit()
+        print(self.connection.commit())
 
     def get_user(self, nom):
-        self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom_utilisateur = %s", (nom,))
+        self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom = %s", (nom,))
         return self.cursor.fetchone()
 
     def create_discussion(self, nom):
@@ -72,15 +73,12 @@ class Discord_bdd:
         return self.cursor.fetchall()
 
     def check_login(self, username, password):
-        self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom_utilisateur = %s AND mot_de_passe = %s", (username, password))
+        self.cursor.execute("SELECT * FROM Utilisateurs WHERE email_utilisateur = %s AND mot_de_passe = %s", (username, password))
         return self.cursor.fetchone()
-
-    def sign_in(self, username, password, mail):
-        self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom_utilisateur = %s", (username,))
+    def sign_in(self, f_name,name, password, mail):
+        self.cursor.execute("SELECT * FROM Utilisateurs WHERE nom_utilisateur = %s", (name,))
         if self.cursor.fetchone() is None:
-            self.create_user(username, mail, password)
+            self.create_user(f_name,name, password, mail)
             return True
         else:
             return False
-
-

@@ -44,7 +44,10 @@ class Server:
                 username = data["username"]
                 password = data["password"]
                 print(f"Try to login: {username}")
-                if self.check_login(username, password):
+                print(f"mdp: {password}")
+                result = self.link.check_login(username, password)
+                print(result)
+                if result:
                     response_data={"status":"ok"}
                     response_msg=json.dumps(response_data).encode('utf-8')
                     conn.sendall(response_msg)
@@ -52,20 +55,22 @@ class Server:
                     response_data={"status":"error"}
                     response_msg=json.dumps(response_data).encode('utf-8')
                     conn.sendall(response_msg)
+                print(response_data)
 
             if data["type"] == "signin":
-                username = data["username"]
+                name = data["name"]
+                f_name = data["f_name"]
                 password = data["password"]
                 mail = data["mail"]
-                print(f"Try to sign in: {username}")
-                if self.sign_in(username, password, mail):
+                print(f"Try to sign in: {name}")
+                if self.link.create_user(f_name,name, mail, password):
                     response_data={"status":"ok"}
                     response_msg=json.dumps(response_data).encode('utf-8')
-                    conn.sendall(response_msg)
+                    self.server_socket.send(response_msg)
                 else:
                     response_data={"status":"error"}
                     response_msg=json.dumps(response_data).encode('utf-8')
-                    conn.sendall(response_msg)
+                    self.server_socket.send(response_msg)
 
 
             if data["type"] == "message":
@@ -83,8 +88,6 @@ class Server:
                 response_data=self.send_discussion(discussionID)
                 response_msg=json.dumps(response_data).encode('utf-8')
                 conn.sendall(response_msg)
-
-            print("Client disconnected.")
 
 
     def check_login(self, username, password):

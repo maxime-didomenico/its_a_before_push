@@ -2,6 +2,8 @@ import tkinter as tk
 import tkinter.ttk as ttk
 import time
 import socket
+import json
+from client import Client
 
 
 root = tk.Tk()
@@ -9,18 +11,9 @@ root.title("Discord.py")
 root.geometry("1200x800")
 root.resizable(True, True)
 root.configure(bg="#2C2F33")
-
 # server connection
 
-client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
-host = socket.gethostname()
-
-client_socket.connect((host, 5566))
-
-message = client_socket.recv(1024)
-message = message.decode("utf8")
-print(message)
+client = Client()
 
 # function
 
@@ -33,6 +26,7 @@ def detect_space(input):
 def verif(name, f_name, mail, password, verify_password, frame_account):
     if verif_entry(name) and verif_entry(f_name) and verif_entry(mail) and verif_password(password, verify_password):
         message_account(frame_account)
+        client.send_signin(name, f_name, mail, password)
     else:
         error_message(frame_account)
 
@@ -63,6 +57,11 @@ def verif_entry(entry):
         return False
     else:
         return True
+
+# login
+
+def login(mail, password, frame):
+    print(client.send_login(mail, password))
 
 def create_account(frame):
 
@@ -116,6 +115,14 @@ def message_account(frame):
     time.sleep(1.5)
     frame.destroy()
 
+def error_login(frame):
+    frame_verification = tk.Frame(frame, bg="#2C2F33", width=500, height=100)
+    frame_verification.place(relx=0.5, rely=0.75, anchor="center")
+    label_validation = tk.Label(frame_verification, text="Your email or password is incorrect", bg="#2C2F33", fg="red", font=("Arial Greek", 27))
+    label_validation.pack()
+    frame.update()
+    time.sleep(1.5)
+    frame_verification.destroy()
 
 def connexion():
     frame_main = tk.Frame(root , bg="#2C2F33")
@@ -143,7 +150,7 @@ def connexion():
     entry_password = ttk.Entry(frame_connexion, width=30, font=("Arial Greek", 20), show="*", style="TEntry", validate="key", validatecommand=(root.register(detect_space), "%P"))
     entry_password.grid(row=1, column=1)
 
-    label_connexion = ttk.Button(frame_connexion, text="Connection", width=30, padding=15)
+    label_connexion = ttk.Button(frame_connexion, text="Connection", width=30, padding=15,command=lambda: login(entry_pseudo.get(), entry_password.get(),frame_main))
     label_connexion.grid(row=2, column=1)
 
     # create account panel
