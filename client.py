@@ -11,11 +11,11 @@ class Client:
         print("Client connected !")
 
 
-    def send_signin(self, nom,prenom, mail, password):
+    def send_signin(self, name,f_name, mail, password):
         signin_data = {
             "type": "signin",
-            "name": nom,
-            "f_name": prenom,
+            "name": name,
+            "f_name": f_name,
             "password": password,
             "mail": mail
         }

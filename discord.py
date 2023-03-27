@@ -61,7 +61,13 @@ def verif_entry(entry):
 # login
 
 def login(mail, password, frame):
-    print(client.send_login(mail, password))
+    result = client.send_login(mail, password)
+    print(result)
+    if result["status"] == "ok":
+        frame.destroy()
+        home()
+    else:
+        error_login(frame)
 
 def create_account(frame):
 
