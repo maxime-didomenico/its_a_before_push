@@ -6,7 +6,7 @@ import time
 
 class Server:
 
-    def __init__(self, host='', port=5566):
+    def __init__(self, host='10.10.1.234', port=5566):
         #self.link = Speaker()
         self.host = host
         self.port = port

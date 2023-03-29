@@ -1,7 +1,6 @@
 import tkinter as tk
 import tkinter.ttk as ttk
 import time
-import socket
 import json
 from client import Client
 
@@ -25,8 +24,8 @@ def detect_space(input):
 
 def verif(name, f_name, mail, password, verify_password, frame_account):
     if verif_entry(name) and verif_entry(f_name) and verif_entry(mail) and verif_password(password, verify_password):
-        message_account(frame_account)
         client.send_signin(name, f_name, mail, password)
+        message_account(frame_account)
     else:
         error_message(frame_account)
 
@@ -62,7 +61,7 @@ def verif_entry(entry):
 
 def login(mail, password, frame):
     result = client.send_login(mail, password)
-    print(result)
+    result = json.loads(result)
     if result["status"] == "ok":
         frame.destroy()
         home()
@@ -171,6 +170,7 @@ def connexion():
     label_create_account.grid(row=0, column=2)
 
 def home():
+    client
     frame_main = tk.Frame(root , bg="#2C2F33")
     frame_main.pack(expand=True, fill="both")
     frame_message = tk.Frame(frame_main, bg="#444654", width=900)

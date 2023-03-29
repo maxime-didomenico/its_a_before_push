@@ -3,7 +3,7 @@ import socket
 
 class Client:
 
-    def __init__(self, host='localhost', port=5566):
+    def __init__(self, host='10.10.1.234', port=5566):
         self.host = host
         self.port = port
         self.client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
