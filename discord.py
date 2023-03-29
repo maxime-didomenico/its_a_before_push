@@ -5,12 +5,6 @@ import time
 import json
 import re
 
-# server connection
-host_ip = input("Please enter the host IP.\n(if you used it in local, press 1)\n> ")
-if host_ip == "1":
-    host_ip = "localhost"
-client = Client(host_ip)
-
 root = tk.Tk()
 root.title("Discord.py")
 root.geometry("1200x800")
@@ -19,6 +13,7 @@ root.configure(bg="#2C2F33")
 
 # function
 
+client = Client("localhost", 5566)
 def detect_space(input):
     if " " in input:
         return False
@@ -35,7 +30,7 @@ def verif(name, f_name, mail, password, verify_password, frame_account):
 def error_message(frame_account):
     label_error = tk.Label(frame_account, text="Error, check if you have on of these problems", bg="#2C2F33", fg="red",
                            font=("Arial Greek", 17))
-    label_error.place(relx=0.20, rely=0.75)
+    label_error.place(relx=0.20, rely=0.80)
     label_error_empty = tk.Label(frame_account, text="* Empty frame", bg="#2C2F33", fg="red",
                                  font=("Arial Greek", 15))
     label_error_empty.place(relx=0.20, rely=0.80)
@@ -185,7 +180,6 @@ def connexion():
     label_create_account.grid(row=0, column=2)
 
 def home():
-    client
     frame_main = tk.Frame(root , bg="#2C2F33")
     frame_main.pack(expand=True, fill="both")
     frame_message = tk.Frame(frame_main, bg="#444654", width=900)
