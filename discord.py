@@ -1,8 +1,9 @@
+from client import Client
 import tkinter as tk
 import tkinter.ttk as ttk
 import time
 import json
-from client import Client
+import re
 
 
 root = tk.Tk()
@@ -23,7 +24,7 @@ def detect_space(input):
         return True
 
 def verif(name, f_name, mail, password, verify_password, frame_account):
-    if verif_entry(name) and verif_entry(f_name) and verif_entry(mail) and verif_password(password, verify_password):
+    if entry_check(name) and entry_check(f_name) and email_check(mail) and password_check(password, verify_password):
         client.send_signin(name, f_name, mail, password)
         message_account(frame_account)
     else:
@@ -32,24 +33,36 @@ def verif(name, f_name, mail, password, verify_password, frame_account):
 def error_message(frame_account):
     label_error = tk.Label(frame_account, text="Error, check if you have on of these problems", bg="#2C2F33", fg="red",
                            font=("Arial Greek", 17))
-    label_error.place(relx=0.20, rely=0.80)
+    label_error.place(relx=0.20, rely=0.75)
     label_error_empty = tk.Label(frame_account, text="* Empty frame", bg="#2C2F33", fg="red",
                                  font=("Arial Greek", 15))
-    label_error_empty.place(relx=0.20, rely=0.85)
+    label_error_empty.place(relx=0.20, rely=0.80)
     label_error_password = tk.Label(frame_account, text="* Password are not the same", bg="#2C2F33", fg="red",
                                     font=("Arial Greek", 15))
-    label_error_password.place(relx=0.20, rely=0.90)
+    label_error_password.place(relx=0.20, rely=0.85)
     label_error_number = tk.Label(frame_account, text="* Number in name or family name", bg="#2C2F33", fg="red",
                                   font=("Arial Greek", 15))
-    label_error_number.place(relx=0.20, rely=0.95)
+    label_error_number.place(relx=0.20, rely=0.90)
+    label_error_mail = tk.Label(frame_account, text="* Wrong email", bg="#2C2F33", fg="red",
+                                  font=("Arial Greek", 15))
+    label_error_mail.place(relx=0.20, rely=0.95)
     frame_account.update()
-def verif_password(password, verify_password):
+
+def email_check(mail):
+    regex = r"^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$"
+    
+    if re.match(regex, mail):
+        return True
+    else:
+        return False
+
+def password_check(password, verify_password):
     if password == verify_password:
         return True
     else:
         return False
 
-def verif_entry(entry):
+def entry_check(entry):
     if entry == "":
         return False
     if any(char.isdigit() for char in entry):

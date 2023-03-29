@@ -1,18 +1,19 @@
-import json
-import socket
 from discord_bdd import Discord_bdd
 from threading import Thread
+import json
+import socket
 import time
+import getpass
 
 class Server:
 
-    def __init__(self, host='10.10.1.234', port=5566):
-        #self.link = Speaker()
+    def __init__(self, host='localhost', port=5566):
         self.host = host
         self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((host, port))
-        self.link = Discord_bdd("root", "azerty", "discord")
+        self.password = getpass.getpass("MySQL Password: \n>")
+        self.link = Discord_bdd("root", self.password, "discord")
         print("Connection is started !")
         self.start()
 
