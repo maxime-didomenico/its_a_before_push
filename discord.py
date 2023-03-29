@@ -5,15 +5,17 @@ import time
 import json
 import re
 
+# server connection
+host_ip = input("Please enter the host IP.\n(if you used it in local, press 1)\n> ")
+if host_ip == "1":
+    host_ip = "localhost"
+client = Client(host_ip)
 
 root = tk.Tk()
 root.title("Discord.py")
 root.geometry("1200x800")
 root.resizable(True, True)
 root.configure(bg="#2C2F33")
-# server connection
-
-client = Client()
 
 # function
 

@@ -7,12 +7,12 @@ import getpass
 
 class Server:
 
-    def __init__(self, host='localhost', port=5566):
+    def __init__(self, host, port=5566):
         self.host = host
         self.port = port
         self.server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.server_socket.bind((host, port))
-        self.password = getpass.getpass("MySQL Password: \n>")
+        self.password = getpass.getpass("MySQL Password: \n> ")
         self.link = Discord_bdd("root", self.password, "discord")
         print("Connection is started !")
         self.start()
@@ -131,4 +131,8 @@ class Server:
         except :
             return False
 
-server = Server()
+host_ip = input("Please enter the host IP.\n(if you used it in local, press 1)\n> ")
+if host_ip == "1":
+    host_ip = "localhost"
+
+server = Server(host_ip)
